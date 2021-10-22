@@ -1,54 +1,60 @@
-const path = require("path");
-const webpack = require("webpack");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const webpack = require('webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
+const path = require('path');
 
-
-module.exports = {
-    entry: {
-        app: "./assets/js/script.js",
-        events: "./assets/js/events.js",
-        schedule: "./assets/js/schedule.js",
-        tickets: "./assets/js/tickets.js"
-    },
-    output: {
-        filename: "[name].bundle.js",
-        path: __dirname + "/dist",
-    },
-    module: {
-        rules: [
+const config = {
+  entry: {
+    app: './assets/js/script.js',
+    events: './assets/js/events.js',
+    schedule: './assets/js/schedule.js',
+    tickets: './assets/js/tickets.js'
+  },
+  output: {
+    filename: '[name].bundle.js',
+    path: __dirname + '/dist'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
           {
-            test: /\.jpg$/,
-            use: [
-              {
-                loader: 'file-loader',
-                options: {
-                  esModule: false,
-                  name(file) {
-                    return '[path][name].[ext]';
-                  },
-                  publicPath: function(url) {
-                    return url.replace('../', '/assets/');
-                  }
-                }
+            loader: 'file-loader',
+            options: {
+              esModule: false,
+              name(file) {
+                return '[path][name].[ext]';
               },
-              {
-                loader: 'image-webpack-loader'
+              publicPath(url) {
+                return url.replace('../', '/assets/');
               }
-            ]
+            }
+          },
+          {
+            loader: 'image-webpack-loader'
           }
         ]
-      },
-    plugins: [
-        new webpack.ProvidePlugin({
-            $: "jquery",
-            jQuery: "jquery"
-        }),
-        new BundleAnalyzerPlugin({
-            analyzerMode: "static", // the report outputs to an HTML file in the dist folder
-        })
-    ],
-    mode: 'development',
+      }
+    ]
+  },
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
+    }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static'
+    })
+  ],
+  devServer: {
+    static: {
+      directory: path.join(__dirname),
+    },
+    compress: true,
+    port: 9000,
+  },
+  mode: 'development'
 };
 
-
-
+module.exports = config;
